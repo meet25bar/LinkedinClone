@@ -30,6 +30,11 @@ export function DialogDemo({
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      if (file.size > 4.5 * 1024 * 1024) {
+        alert("Image too large! Vercel limits uploads to 4.5MB. Please choose a smaller file or a compressed photo.");
+        if (inputRef.current) inputRef.current.value = "";
+        return;
+      }
       setImageURL(URL.createObjectURL(file))
       setSelectedFile(file)
     }

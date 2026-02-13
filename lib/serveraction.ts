@@ -34,30 +34,41 @@ export const createPostAction = async (formData: FormData) => {
   let imageUrl = "";
 
   if (file && typeof file === "object") {
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
 
-    const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
+      const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream({ resource_type: "image", folder: "linkedin_posts" }, (err, result) => {
+            if (err) {
+              console.error("Cloudinary upload_stream error:", err);
+              reject(new Error(`Cloudinary Upload Error: ${err.message}`));
+            }
+            else if (result) resolve(result);
+            else reject(new Error("Cloudinary result was empty"));
+          })
+          .end(buffer);
+      });
 
-      cloudinary.uploader
-        .upload_stream({ resource_type: "image" }, (err, result) => {
-          if (err) reject(err);
-          else if (result) resolve(result);
-          else reject(new Error("Upload failed"));
-        })
-        .end(buffer);
-    });
-
-    imageUrl = uploadResult.secure_url;
+      imageUrl = uploadResult.secure_url;
+    } catch (uploadError: any) {
+      console.error("Image processing/upload failed:", uploadError);
+      throw new Error(uploadError.message || "Failed to process or upload image to Cloudinary");
+    }
   }
 
-  await Post.create({
-    description: inputText,
-    User: userDatabase,
-    imageUrl: imageUrl,
-  });
-
-  revalidatePath("/");
+  try {
+    await Post.create({
+      description: inputText,
+      User: userDatabase,
+      imageUrl: imageUrl,
+    });
+    revalidatePath("/");
+  } catch (dbError: any) {
+    console.error("Database save failed:", dbError);
+    throw new Error("Failed to save post to database: " + dbError.message);
+  }
 };
 
 // ✅ Get all posts with populated comments

@@ -74,7 +74,7 @@ export const getAllposts = async () => {
     if (!posts) return [];
 
     // Filter out posts where User is missing or incomplete
-    const validPosts = posts.filter((post: any) => post.User && post.User.userId);
+    const validPosts = posts.filter((post) => post.User && post.User.userId);
 
     return JSON.parse(JSON.stringify(validPosts));
   } catch (error) {

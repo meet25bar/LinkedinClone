@@ -43,7 +43,8 @@ export const createPostAction = async (formData: FormData) => {
       cloudinary.uploader
         .upload_stream({ resource_type: "image" }, (err, result) => {
           if (err) reject(err);
-          else resolve(result);
+          else if (result) resolve(result);
+          else reject(new Error("Upload failed"));
         })
         .end(buffer);
     });
@@ -104,7 +105,8 @@ export const deletePostAction = async (formData: FormData) => {
     await Post.deleteOne({ _id: postId });
     revalidatePath("/");
   } catch (error) {
-    throw new Error("An error occurred while deleting the post", error);
+    console.error("Delete error:", error);
+    throw new Error("An error occurred while deleting the post");
   }
 };
 

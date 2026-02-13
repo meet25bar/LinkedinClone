@@ -3,6 +3,7 @@
 
 import { Button } from '@/components/ui/button';
 import { IPostDocument } from '@/models/post.model';
+import { ICommentDocument } from '@/models/comments.model';
 import { useUser } from '@clerk/nextjs';
 import { MessageCircleCode, Repeat, Send, ThumbsUp } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -16,7 +17,7 @@ const SocialOption = ({ post }: { post: IPostDocument }) => {
   const [mounted, setMounted] = useState(false);
   const [commentOpen, setCommentOpen] = useState(false);
   const [comment, setComment] = useState('');
-  const [postComments, setPostComments] = useState(post.comments || []);
+  const [postComments, setPostComments] = useState<ICommentDocument[]>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -94,9 +95,8 @@ const SocialOption = ({ post }: { post: IPostDocument }) => {
           whileHover={{ scale: 1.05 }}
           onClick={handleLikeToggle}
           variant='ghost'
-          className={`flex items-center gap-1 transition-colors ${
-            isAlreadyLiked ? 'text-blue-600' : 'text-gray-600 hover:text-black'
-          }`}
+          className={`flex items-center gap-1 transition-colors ${isAlreadyLiked ? 'text-blue-600' : 'text-gray-600 hover:text-black'
+            }`}
         >
           <ThumbsUp
             className='w-4 h-4'

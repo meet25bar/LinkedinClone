@@ -38,7 +38,7 @@ export const createPostAction = async (formData: FormData) => {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const uploadResult: CloudinaryUploadResult = await new Promise((resolve, reject) => {
+    const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
 
       cloudinary.uploader
         .upload_stream({ resource_type: "image" }, (err, result) => {

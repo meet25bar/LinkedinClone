@@ -52,6 +52,7 @@ export function DialogDemo({
       setSelectedFile(null)
     } catch (err) {
       console.error("Post failed:", err)
+      alert("Post failed! Check your internet or if you are signed in correctly.")
     }
   }
 

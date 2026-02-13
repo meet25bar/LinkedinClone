@@ -8,7 +8,6 @@ import connectDB from "./db";
 import { revalidatePath } from "next/cache";
 import { Comment } from "@/models/comments.model";
 import mongoose from "mongoose"; // ✅ Required for ObjectId casting
-import { CloudinaryUploadResult } from "@/lib/types";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,

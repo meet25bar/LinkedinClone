@@ -1,5 +1,5 @@
 import ProfilePhoto from "@/Component/Shared/ProfilePhoto";
-import mongoose, { Date, Model, Models, Mongoose, Types } from "mongoose";
+import mongoose, { Date, Model, Models, Mongoose, Types, Document } from "mongoose";
 import { IUser } from "./User.Model";
 import { IComment } from "./comments.model";
 export interface Ipost {
@@ -10,6 +10,7 @@ export interface Ipost {
     comments?: Types.ObjectId[]
 }
 export interface IPostDocument extends Ipost, Document {
+    _id: string;
     createdAt: Date,
     updatedAt: Date
 }

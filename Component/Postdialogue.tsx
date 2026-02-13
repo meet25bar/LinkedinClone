@@ -55,9 +55,15 @@ export function DialogDemo({
       setInputText("")
       setImageURL(null)
       setSelectedFile(null)
-    } catch (err) {
+    } catch (err: any) {
       console.error("Post failed:", err)
-      alert("Post failed! Check your internet or if you are signed in correctly.")
+      // Extract the most readable error message
+      const errorMessage =
+        (err instanceof Error && err.message) ||
+        (typeof err === 'object' && err !== null && 'message' in err && typeof err.message === 'string' && err.message) ||
+        (typeof err === 'string' && err) ||
+        "Internet connection error or server timeout";
+      alert(`Post failed: ${errorMessage}`);
     }
   }
 
